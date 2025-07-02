@@ -1,13 +1,11 @@
 package dev.training.library.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.time.LocalDate;
 
 
 @Entity
-@Data
 public class UserModel {
 
     @Id
@@ -24,14 +22,6 @@ public class UserModel {
     @PrePersist
     public void prePersist() {
         this.memberSince = LocalDate.now();
-    }
-    public UserModel(Long id, String email, String name, String password, LocalDate birth, LocalDate memberSince) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.birth = birth;
-        this.memberSince = memberSince;
     }
 
     public Long getId() {

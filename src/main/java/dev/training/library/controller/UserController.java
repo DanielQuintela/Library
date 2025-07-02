@@ -21,7 +21,7 @@ public class UserController {
         return service.login(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     public UserModel getUserById(@PathVariable Long id) {
         return service.getUserById(id);
     }
