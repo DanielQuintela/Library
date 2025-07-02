@@ -53,6 +53,13 @@ public class RentService {
         if(!repository.existsById(rentModel.getId())){
             throw new CustomException("Aluguel de livro não encontrado.",404);
         }
+        BookModel book = bookRepository.findById(rentModel.getBook().getId())
+                .orElseThrow(() -> new CustomException("Livro não encontrado",404));
+        UserModel user = userRepository.findById(rentModel.getUser().getId())
+                .orElseThrow(() -> new CustomException("Usuário não encontrado",404));
+
+        rentModel.setBook(book);
+        rentModel.setUser(user);
         return repository.save(rentModel);
     }
 
