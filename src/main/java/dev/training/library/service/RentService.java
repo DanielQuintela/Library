@@ -1,5 +1,6 @@
 package dev.training.library.service;
 
+import dev.training.library.exception.CustomException;
 import dev.training.library.model.BookModel;
 import dev.training.library.model.RentModel;
 import dev.training.library.model.UserModel;
@@ -29,9 +30,9 @@ public class RentService {
 
     public RentModel newRent(RentModel rentModel) {
         BookModel book = bookRepository.findById(rentModel.getBook().getId())
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+                .orElseThrow(() -> new CustomException("Livro não encontrado",404));
         UserModel user = userRepository.findById(rentModel.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new CustomException("Usuário não encontrado",404));
 
         rentModel.setBook(book);
         rentModel.setUser(user);
@@ -45,12 +46,12 @@ public class RentService {
 
     public RentModel getById(long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Aluguel de livro não encontrado."));
+                .orElseThrow(() -> new CustomException("Aluguel de livro não encontrado.",404));
     }
 
     public RentModel updateRent(RentModel rentModel) {
         if(!repository.existsById(rentModel.getId())){
-            throw new RuntimeException("Aluguel de livro não encontrado.");
+            throw new CustomException("Aluguel de livro não encontrado.",404);
         }
         return repository.save(rentModel);
     }

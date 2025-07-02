@@ -1,5 +1,6 @@
 package dev.training.library.service;
 
+import dev.training.library.exception.CustomException;
 import dev.training.library.model.BookModel;
 import dev.training.library.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class BookService {
     public BookModel newBook(BookModel book) {
         Optional<BookModel> existingBook = repository.findByisbn(book.getIsbn());
         if (existingBook.isPresent()) {
-            throw new RuntimeException("ISBN já cadastrado!");
+            throw new CustomException("ISBN já cadastrado!",500);
         }
         return repository.save(book);
     }
@@ -33,6 +34,6 @@ public class BookService {
 
     public BookModel getByID(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+                .orElseThrow(() -> new CustomException("Livro não encontrado",404));
     }
 }
