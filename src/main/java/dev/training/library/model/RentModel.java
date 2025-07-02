@@ -21,6 +21,11 @@ public class RentModel {
     private LocalDate rentDate;
     private LocalDate returnDate;
 
+    @PrePersist
+    public void prePersist() {
+        this.rentDate = LocalDate.now();
+    }
+
     public Long getId() {
         return id;
     }
