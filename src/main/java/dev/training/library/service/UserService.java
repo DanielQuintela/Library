@@ -1,8 +1,8 @@
 package dev.training.library.service;
 
+import dev.training.library.exception.CustomException;
 import dev.training.library.model.UserModel;
 import dev.training.library.repository.UserRepository;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class UserService {
 
     public UserModel getUserById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new CustomException("Usuário não encontrado",404));
     }
 
     public Optional<UserModel> login(String email, String password) {
@@ -36,7 +36,7 @@ public class UserService {
     public UserModel saveUser(UserModel userModel) {
         Optional<UserModel> existingUser = repository.findByEmail(userModel.getEmail());
         if(existingUser.isPresent()){
-            throw new RuntimeException("Usuário já cadastrado");
+            throw new CustomException("Usuário já cadastrado com este e-mail", 400);
         }
 
         return repository.save(userModel);
