@@ -7,6 +7,10 @@ import dev.training.library.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -25,7 +29,7 @@ public class UserService {
                 .orElseThrow(() -> new CustomException("Usuário não encontrado",404));
     }
 
-    public String login(String email, String password) {
+    public  Map<String, Object> login(String email, String password) {
 
         Optional<UserModel> User = repository.findByEmail(email);
         if(User.isEmpty()){
@@ -37,7 +41,12 @@ public class UserService {
             throw new CustomException("Senha Incorreta", 401);
         }
 
-        return SecurityConfig.JwtUtil.generateToken(User.get().getEmail());
+        String token = SecurityConfig.JwtUtil.generateToken(User.get().getEmail());
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", User.get());
+
+        return response;
     }
 
     public void deleteUserById(long id) {
@@ -52,6 +61,11 @@ public class UserService {
         Optional<UserModel> existingUser = repository.findByEmail(userModel.getEmail());
         if(existingUser.isPresent()){
             throw new CustomException("Usuário já cadastrado com este e-mail", 400);
+        }
+        LocalDate today = LocalDate.now();
+
+        if(userModel.getBirth().isAfter(today)){
+            throw new CustomException("Data de nascimento não pode ser futura", 400);
         }
 
         String encryptedPassword = passwordEncoder.encode(userModel.getPassword());

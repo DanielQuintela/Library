@@ -19,11 +19,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserModel request) {
-        String token = service.login(request.getEmail(), request.getPassword());
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UserModel request) {
+        return ResponseEntity.ok(service.login(request.getEmail(), request.getPassword()));
     }
 
     @GetMapping("/{id}")
