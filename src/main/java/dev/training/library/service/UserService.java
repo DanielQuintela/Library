@@ -1,28 +1,52 @@
 package dev.training.library.service;
 
+import dev.training.library.config.SecurityConfig;
 import dev.training.library.exception.CustomException;
 import dev.training.library.model.UserModel;
 import dev.training.library.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class UserService {
 
-    public UserService(UserRepository repository) {
-        this.repository = repository;
-    }
-
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public UserModel getUserById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new CustomException("Usuário não encontrado",404));
     }
 
-    public Optional<UserModel> login(String email, String password) {
-        return repository.findByEmailAndPassword(email, password);
+    public  Map<String, Object> login(String email, String password) {
+
+        Optional<UserModel> User = repository.findByEmail(email);
+        if(User.isEmpty()){
+            throw new CustomException("Email não encontrado", 401);
+        }
+
+        boolean passwordMatches = passwordEncoder.matches(password ,User.get().getPassword());
+        if(!passwordMatches){
+            throw new CustomException("Senha Incorreta", 401);
+        }
+
+        String token = SecurityConfig.JwtUtil.generateToken(User.get().getEmail());
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", User.get());
+
+        return response;
     }
 
     public void deleteUserById(long id) {
@@ -38,6 +62,14 @@ public class UserService {
         if(existingUser.isPresent()){
             throw new CustomException("Usuário já cadastrado com este e-mail", 400);
         }
+        LocalDate today = LocalDate.now();
+
+        if(userModel.getBirth().isAfter(today)){
+            throw new CustomException("Data de nascimento não pode ser futura", 400);
+        }
+
+        String encryptedPassword = passwordEncoder.encode(userModel.getPassword());
+        userModel.setPassword(encryptedPassword);
 
         return repository.save(userModel);
     }

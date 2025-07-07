@@ -2,9 +2,11 @@ package dev.training.library.controller;
 
 import dev.training.library.model.UserModel;
 import dev.training.library.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -17,8 +19,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Optional<UserModel> login(@RequestBody UserModel loginRequest) {
-        return service.login(loginRequest.getEmail(), loginRequest.getPassword());
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UserModel request) {
+        return ResponseEntity.ok(service.login(request.getEmail(), request.getPassword()));
     }
 
     @GetMapping("/{id}")
