@@ -17,7 +17,11 @@ public class BookService {
     private final BookRepository repository;
 
     public List<BookModel> listAll(){
-        return  repository.findAll();
+        List<BookModel> list = repository.findAll();
+        if(list.isEmpty()){
+            throw new CustomException("Não há livros cadastrados", 500);
+        }
+        return list;
     }
 
     public BookModel newBook(BookModel book) {

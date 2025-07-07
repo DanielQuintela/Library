@@ -41,7 +41,11 @@ public class RentService {
     }
 
     public List<RentModel> getRentByUserId(long id) {
-        return repository.findByUserId(id);
+        List<RentModel> list = repository.findByUserId(id);
+        if(list.isEmpty()){
+            throw new CustomException("Não há alugueis para esse usuário", 404);
+        }
+        return list;
     }
 
     public RentModel getById(long id) {
