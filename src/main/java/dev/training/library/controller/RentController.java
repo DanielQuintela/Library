@@ -40,4 +40,9 @@ public class RentController {
     public RentModel updateRent(@RequestBody RentModel rentModel) {
         return service.updateRent(rentModel);
     }
+
+    @GetMapping("/owner/{id}")
+    public List<RentModel> getRentByOwnerUserId(@PathVariable Long id) {
+        return service.getRentByOwnerUserId(id);
+    }
 }

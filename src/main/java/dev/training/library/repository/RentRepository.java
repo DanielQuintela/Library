@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface RentRepository extends JpaRepository<RentModel, Long> {
     List<RentModel> findByUserId(Long userId);
+    List<RentModel> findByOwnerUserId(Long ownerUserId);
 }

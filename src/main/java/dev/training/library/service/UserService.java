@@ -41,7 +41,7 @@ public class UserService {
             throw new CustomException("Senha Incorreta", 401);
         }
 
-        String token = SecurityConfig.JwtUtil.generateToken(User.get().getEmail());
+        String token = SecurityConfig.JwtUtil.generateToken(User.get().getEmail(), User.get().getId());
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("user", User.get());
