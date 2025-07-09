@@ -19,7 +19,7 @@ public class BookService {
     public List<BookModel> listAll(){
         List<BookModel> list = repository.findAll();
         if(list.isEmpty()){
-            throw new CustomException("Não há livros cadastrados", 500);
+            throw new CustomException("Não há livros cadastrados", 204);
         }
         return list;
     }
