@@ -18,6 +18,10 @@ public class RentModel {
     @JoinColumn(name = "user_id")
     private UserModel user;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_user_id")
+    private UserModel ownerUser;
+
     private LocalDate rentDate;
     private LocalDate returnDate;
 
@@ -44,6 +48,14 @@ public class RentModel {
 
     public void setUser(UserModel user) {
         this.user = user;
+    }
+
+    public UserModel getOwner_user() {
+        return ownerUser;
+    }
+
+    public void setOwner_user(UserModel owner_user) {
+        this.ownerUser = owner_user;
     }
 
     public LocalDate getRentDate() {

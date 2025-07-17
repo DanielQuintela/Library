@@ -67,4 +67,12 @@ public class RentService {
         return repository.save(rentModel);
     }
 
+    public List<RentModel> getRentByOwnerUserId(Long ownerUserId) {
+        List<RentModel> listOwner = repository.findByOwnerUserId(ownerUserId);
+        if(listOwner.isEmpty()) {
+            throw new CustomException("Não há alugueis", 204);
+        }
+        return listOwner;
+    }
+
 }

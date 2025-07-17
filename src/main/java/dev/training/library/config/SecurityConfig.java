@@ -38,9 +38,10 @@ public class SecurityConfig {
         private static final String SECRET_KEY = "segredoDQLCB";
         private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 2;
 
-        public static String generateToken(String email) {
+        public static String generateToken(String email, Long id) {
             return Jwts.builder()
                     .setSubject(email)
+                    .claim("id", id)
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                     .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
