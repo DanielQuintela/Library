@@ -8,10 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -28,6 +25,8 @@ public class UserService {
         return repository.findById(id)
                 .orElseThrow(() -> new CustomException("Usuário não encontrado",404));
     }
+
+    public List<UserModel> getAllUsers() { return  repository. findAll(); }
 
     public  Map<String, Object> login(String email, String password) {
 
